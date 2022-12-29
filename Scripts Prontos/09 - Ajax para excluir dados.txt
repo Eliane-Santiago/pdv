@@ -1,0 +1,38 @@
+
+<!--AJAX PARA EXCLUIR DADOS -->
+<script type="text/javascript">
+	$("#form-excluir").submit(function () {
+		var pag = "<?=$pag?>";
+		event.preventDefault();
+		var formData = new FormData(this);
+
+		$.ajax({
+			url: pag + "/excluir.php",
+			type: 'POST',
+			data: formData,
+
+			success: function (mensagem) {
+
+				$('#mensagem').removeClass()
+
+				if (mensagem.trim() == "Excluído com Sucesso!") {
+
+                    $('#btn-fechar').click();
+                    window.location = "index.php?pagina="+pag;
+
+                } else {
+
+                	$('#mensagem-excluir').addClass('text-danger')
+                }
+
+                $('#mensagem-excluir').text(mensagem)
+
+            },
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            
+        });
+	});
+</script>

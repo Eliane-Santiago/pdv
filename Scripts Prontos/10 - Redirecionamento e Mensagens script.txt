@@ -1,0 +1,3 @@
+echo "<script language='javascript'>window.location='painel-adm'</script>";
+
+echo "<script language='javascript'>window.alert('Dados Incorretos')</script>";

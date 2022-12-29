@@ -1,0 +1,10 @@
+<select class="form-select mt-1" aria-label="Default select example" name="nivelCad">
+							
+							<option <?php if(@$nivel_ed == 'Cliente'){ ?> selected <?php } ?>  value="Cliente">Cliente</option>
+
+							<option <?php if(@$nivel_ed == 'Administrador'){ ?> selected <?php } ?>  value="Administrador">Administrador</option>
+							
+							<option <?php if(@$nivel_ed == 'Vendedor'){ ?> selected <?php } ?>  value="Vendedor">Vendedor</option>
+
+							<option <?php if(@$nivel_ed == 'Tesoureiro'){ ?> selected <?php } ?>  value="Tesoureiro">Tesoureiro</option>
+</select>

@@ -1,0 +1,5 @@
+for($i=0; $i < $total_reg; $i++){
+						foreach ($res[$i] as $key => $value){
+
+						}
+}
