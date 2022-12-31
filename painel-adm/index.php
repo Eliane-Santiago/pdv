@@ -28,6 +28,9 @@ $menu2 = 'usuarios';
   crossorigin="anonymous"></script>
   <!--SCRIPT CDN JQUERY E AJAX-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!--DATATABLES BOOTSTRAP 5 VIA DOWLOAND-->
+  <link rel="stylesheet" type="text/css" href="../DataTabels-Traduzido/datatables.min.css"/>
+  <script type="text/javascript" src="../DataTabels-Traduzido/datatables.min.js"></script>
 </head>
 <body>
 
@@ -88,13 +91,13 @@ $menu2 = 'usuarios';
   <!--LOCAL ONDE AS PÁGINAS SERÃO INCLUÍDAS-->
   <div class="container-fluid mt-4 mx-3">
     <?php
-      if(@$_GET['pagina'] == $menu1){
-        require_once($menu1 .'.php');   
-      } 
-      else if(@$_GET['pagina'] == $menu2){
-        require_once($menu2 .'.php');
-      }
-      
+    if(@$_GET['pagina'] == $menu1){
+      require_once($menu1 .'.php');   
+    } 
+    else if(@$_GET['pagina'] == $menu2){
+      require_once($menu2 .'.php');
+    }
+
     ?>
   </div>
 

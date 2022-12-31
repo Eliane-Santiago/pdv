@@ -1,11 +1,61 @@
 <!--VARIÁVEL DA PÁGINA-->
 <?php
 $pag = 'usuarios';
+
+require_once('../conexao.php');
 ?>
 
 <!--BOTÃO CADASTRAR USUÁRIOS-->
-<a href="index.php?pagina=<?php echo $pag ?>&funcao=novo" type="button" class="btn btn-secondary mt-2">Novo Usuário</a>
+<a href="index.php?pagina=<?php echo $pag ?>&funcao=novo" type="button" id="btn-novoUsuario" class="btn btn-dark mt-2">Novo Usuário</a>
 
+<!--ADICIONANDO O DATATABLE BOOTSTRAP 5-->
+<div style="margin-right:25px; margin-top: 25px;">
+
+  <?php
+    //CONSULTADO REGISTROS NO BD
+    $query_con = $pdo->query("SELECT * FROM usuarios");
+
+    $res_con = $query_con->fetchAll(PDO::FETCH_ASSOC); // ESSE COMANDO É PARA SER USADO SOMENTE NO SELECT
+
+    //VERIFICANDO SE O E-MAIL JA EXISTE NO BD E PARANDO A INSERSÃO NO BD
+    if(@count($res_con) > 0){
+  ?>
+
+    <table id="example" class="table table-dark table-striped table-responsive" style="width:100%; padding-top: 15px; margin-bottom: 10px;">
+      <thead>
+        <tr>
+          <th>NOME</th>
+          <th>CPF</th>
+          <th>EMAIL</th>
+          <th>SENHA</th>
+          <th>NÍVEL</th>
+          <th>AÇÕES</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Eliane</td>
+          <td>000.000.000-00</td>
+          <td>eliane@gmail.com</td>
+          <td>1234</td>
+          <td>Adminstrador</td>
+          <td>Editar / Excluir</td>
+
+        </tr>
+        <tr>
+          <td>Eliane</td>
+          <td>000.000.000-00</td>
+          <td>eliane@gmail.com</td>
+          <td>1234</td>
+          <td>Adminstrador</td>
+          <td>Editar / Excluir</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  <?php } else{
+      echo "<p>Não existem dados para serem exibidos.</p>";
+  }?>  
 
 <!--TELA MODAL CADASTRAR USUÁRIOS-->
 <div class="modal fade" tabindex="-1" id="modal-cadastrar" data-bs-backdrop="static">
@@ -52,7 +102,7 @@ $pag = 'usuarios';
           </div>
           <small>
             <div align="center" class="mt-1" id="mensagem">
-              
+
             </div>
           </small>
         </div>
@@ -82,64 +132,70 @@ $pag = 'usuarios';
     });
 
     //ABRIR A TELA MODAL ( myModal.show(); or myModal.toggle(); )
-    myModal.show();
+    //myModal.show();
+    myModal.toggle();
 
   </script>
-
-
 
 <?php } ?>
 
 
 <!--AJAX PARA INSERÇÃO E EDIÇÃO DOS DADOS COM IMAGEM -->
 <script type="text/javascript">
-    $("#form").submit(function () {
-        var pag = "<?=$pag?>";
+  $("#form").submit(function () {
+    var pag = "<?=$pag?>";
         event.preventDefault(); //EVITA QUE A PÁGINA SEJA ATUALIZADA
         var formData = new FormData(this); // CRIANDO A VARIÁVEL DO FORMULARIO
 
         //ESTRUTURA DO AJAXS
         $.ajax({
-            url: pag + "/inserir.php",
-            type: 'POST',
-            data: formData,
+          url: pag + "/inserir.php",
+          type: 'POST',
+          data: formData,
 
-            success: function (mensagem) {
+          success: function (mensagem) {
 
-                $('#mensagem').removeClass()
+            $('#mensagem').removeClass()
 
-                if (mensagem.trim() == "Salvo com Sucesso!") {
+            if (mensagem.trim() == "Salvo com Sucesso!") {
 
                     //$('#nome').val('');
                     //$('#cpf').val('');
                     $('#btn-fechar').click();
                     //window.location = "index.php?pag="+pag; //FAZ A ATUALIZAÇÃO DA PAGINA
 
-                } else {
+                  } else {
                     //EXIBE A MESAGEM DE ERRO
                     $('#mensagem').addClass('text-danger')
-                }
+                  }
 
-                $('#mensagem').text(mensagem)
+                  $('#mensagem').text(mensagem)
 
-            },
+                },
 
             //PASSAR ARQUIVO JUNTO AO FORMULARIO
             cache: false,
             contentType: false,
             processData: false,
             xhr: function () {  // Custom XMLHttpRequest
-                var myXhr = $.ajaxSettings.xhr();
+              var myXhr = $.ajaxSettings.xhr();
                 if (myXhr.upload) { // Avalia se tem suporte a propriedade upload
-                    myXhr.upload.addEventListener('progress', function () {
-                        /* faz alguma coisa durante o progresso do upload */
-                    }, false);
+                  myXhr.upload.addEventListener('progress', function () {
+                    /* faz alguma coisa durante o progresso do upload */
+                  }, false);
                 }
                 return myXhr;
-            }
-        });
-    });
-</script>
+              }
+            });
+      });
+    </script>
+
+    <!--SCRITP JQUERY DATATABLES BOOTSTRAP 5-->
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#example').DataTable();
+      });
+    </script>
 
 
 
