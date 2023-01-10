@@ -51,7 +51,10 @@ require_once('../conexao.php');
               <td><?php echo $res_con[$i]['senha'] ?></td>
               <td><?php echo $res_con[$i]['nivel'] ?></td>
               <td>
-                <i class="bi bi-pencil-square text-primary"></i>
+                <a href="index.php?pagina=<?php echo $pag ?>&funcao=editar&id=<?php echo $res_con[$i]['id'] ?>" title="Editar Registro">
+                  <i class="bi bi-pencil-square text-primary"></i>
+                </a>
+
                 <i class="bi bi-trash3-fill text-danger mx-3"></i>
               </td>
             </tr>
@@ -150,6 +153,31 @@ require_once('../conexao.php');
 
 <?php } ?>
 
+  <!--CHAMADA DA TELA MODAL VIA SCRIPT-->
+  <?php if(@$_GET['funcao'] == "editar") { ?>
+
+    <script type="text/javascript">
+
+    //CRIANDO A VARIÁVEL DA TELA MODAL - NÃO ESTATICA
+    //var myModal = new bootstrap.Modal(document.getElementById('modal-cadastrar'));
+    //const myModal = new bootstrap.Modal(document.getElementById('modal-cadastrar'))
+
+
+
+    //CRIANDO A VARIÁVEL DA TELA MODAL - ESTATICA
+    const myModal = new bootstrap.Modal(document.getElementById('modal-cadastrar'), {
+      backdrop: 'static'
+
+          });
+
+    //ABRIR A TELA MODAL ( myModal.show(); or myModal.toggle(); )
+    myModal.show();
+    //myModal.toggle();
+
+  </script>
+
+<?php } ?>
+
 
 <!--AJAX PARA INSERÇÃO E EDIÇÃO DOS DADOS COM IMAGEM -->
 <script type="text/javascript">
@@ -173,7 +201,7 @@ require_once('../conexao.php');
                     //$('#nome').val('');
                     //$('#cpf').val('');
                     $('#btn-fechar').click();
-                    window.location = "index.php?pagina=<?php echo $pag ?>"; //FAZ A ATUALIZAÇÃO DA PAGINA
+                    window.location = "index.php?pagina=<?php echo $pag ?>";//FAZ A ATUALIZAÇÃO DA PAGINA
 
                   } else {
                     //EXIBE A MESAGEM DE ERRO
