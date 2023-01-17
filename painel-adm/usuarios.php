@@ -67,12 +67,38 @@ require_once('../conexao.php');
     echo "<p>Não existem dados para serem exibidos.</p>";
   }?>  
 
+  <!--CRIANDO A VARIÁVEL DA TELA MODAL CADASTRAR USUÁRIOS-->
+  <?php 
+  if(@$_GET['funcao'] == "editar") { 
+    $titulo_modal = 'Editar Registro';
+
+    $query = $pdo->query("SELECT * FROM usuarios WHERE id = '$_GET[id]' ");
+
+    $res = $query->fetchAll(PDO::FETCH_ASSOC); // ESSE COMANDO É PARA SER USADO SOMENTE NO SELECT
+
+    $total_reg = @count($res);
+
+    //VERIFICANDO SE O E-MAIL JA EXISTE NO BD E PARANDO A INSERSÃO NO BD
+    if($total_reg > 0){
+      $nome = $res[0]['nome'];
+      $email = $res[0]['email'];
+      $cpf = $res[0]['cpf'];
+      $senha = $res[0]['senha'];
+      $nivel = $res[0]['nivel'];
+    }
+
+  }else{
+    $titulo_modal = 'Inserir Registro';
+  }
+
+  ?>
+
   <!--TELA MODAL CADASTRAR USUÁRIOS-->
   <div class="modal fade" tabindex="-1" id="modal-cadastrar" data-bs-backdrop="static">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Inserir Registro</h5>
+          <h5 class="modal-title"><?php echo $titulo_modal ?></h5>
           <!--TIVE QUE ENGLOBAR O BOTÃO FECHAR NO LINK PARA CORRIGIR O ERRO DE CARREGAMENTO DA PÁGINA-->
           <a href="index.php?pagina=<?php echo $pag ?>"><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></a>
         </div>
@@ -82,33 +108,33 @@ require_once('../conexao.php');
               <div class="col-md-6">
                 <div class="mb-3">
                   <label for="exampleFormControlInput1" class="form-label">Nome</label>
-                  <input type="text" class="form-control" id="input-nome" name="input-nome" placeholder="Nome" required="">
+                  <input type="text" class="form-control" id="input-nome" name="input-nome" placeholder="Nome" required="" value="<?php echo @$nome ?>">
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
                   <label for="exampleFormControlInput1" class="form-label">CPF</label>
-                  <input type="text" class="form-control" id="input-cpf" name="input-cpf" placeholder="CPF" required="">
+                  <input type="text" class="form-control" id="input-cpf" name="input-cpf" placeholder="CPF" required=""value="<?php echo @$cpf ?>">
                 </div>
               </div>
             </div>
             <div class="mb-3">
               <label for="exampleFormControlInput1" class="form-label">E-mail</label>
-              <input type="email" class="form-control" id="input-email" name="input-email" placeholder="Email" required="">
+              <input type="email" class="form-control" id="input-email" name="input-email" placeholder="Email" required="" value="<?php echo @$email ?>">
             </div>
             <div class="mb-3">
               <label for="exampleFormControlInput1" class="form-label">Senha</label>
-              <input type="text" class="form-control" id="input-senha" name="input-senha" placeholder="Senha" required="">
+              <input type="text" class="form-control" id="input-senha" name="input-senha" placeholder="Senha" required="" value="<?php echo @$senha ?>">
             </div>
             <div class="mb-3">
               <label for="exampleFormControlInput1" class="form-label">Nível</label>
               <!--CRIANDO AS OPÇÕES DE NÍVEL-->
               <select class="form-select mt-1" aria-label="Default select example" name="nivel">
-                <option <?php if(@$nivel_ed == 'Operador'){ ?> selected <?php } ?>  value="Operador">Operador</option>
+                <option <?php if(@$nivel == 'Operador'){ ?> selected <?php } ?>  value="Operador">Operador</option>
 
-                <option <?php if(@$nivel_ed == 'Administrador'){ ?> selected <?php } ?>  value="Administrador">Administrador</option>
+                <option <?php if(@$nivel == 'Administrador'){ ?> selected <?php } ?>  value="Administrador">Administrador</option>
 
-                <option <?php if(@$nivel_ed == 'Tesoureiro'){ ?> selected <?php } ?>  value="Tesoureiro">Tesoureiro</option>
+                <option <?php if(@$nivel == 'Tesoureiro'){ ?> selected <?php } ?>  value="Tesoureiro">Tesoureiro</option>
               </select>
             </div>
             <small>
@@ -121,6 +147,10 @@ require_once('../conexao.php');
             <!--TIVE QUE ENGLOBAR O BOTÃO FECHAR NO LINK PARA CORRIGIR O ERRO DE CARREGAMENTO DA PÁGINA-->
             <a href="index.php?pagina=<?php echo $pag ?>"><button name="btn-fechar" id="btn-fechar"type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button></a>
             <button name="btn-salvar" id="btn-salvar" type="submit" class="btn btn-primary">Salvar</button>
+
+            <!--INPUT DO ID NÃO SERÁ EXIBIDO NA TELA-->
+            <input name="id" type="hidden" value="<?php echo @$_GET['id'] ?>"> 
+
           </div>
         </form>
       </div>
