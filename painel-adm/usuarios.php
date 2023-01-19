@@ -51,11 +51,15 @@ require_once('../conexao.php');
               <td><?php echo $res_con[$i]['senha'] ?></td>
               <td><?php echo $res_con[$i]['nivel'] ?></td>
               <td>
-                <a href="index.php?pagina=<?php echo $pag ?>&funcao=editar&id=<?php echo $res_con[$i]['id'] ?>" title="Editar Registro">
+                <!--CONFIGURAÇÕES DO BOTÃO EDITAR-->
+                <a href="index.php?pagina=<?php echo $pag ?>&funcao=editar&id=<?php echo $res_con[$i]['id'] ?>" title="Excluir Registro">
                   <i class="bi bi-pencil-square text-primary"></i>
                 </a>
 
-                <i class="bi bi-trash3-fill text-danger mx-3"></i>
+                <!--CONFIGURAÇÕES DO BOTÃO DELETAR-->
+                <a href="index.php?pagina=<?php echo $pag ?>&funcao=deletar&id=<?php echo $res_con[$i]['id'] ?>" title="Editar Registro">
+                  <i class="bi bi-trash3-fill text-danger mx-3"></i>
+                </a>
               </td>
             </tr>
             <?php } ?> <!--FECHANDO O FOR DENTRO DO PHP-->
@@ -87,8 +91,10 @@ require_once('../conexao.php');
       $nivel = $res[0]['nivel'];
     }
 
-  }else{
+  }else if (@$_GET['funcao'] == "novo"){
     $titulo_modal = 'Inserir Registro';
+  } else {
+    $titulo_modal = 'Excluir Registro';
   }
 
   ?>
@@ -151,6 +157,10 @@ require_once('../conexao.php');
             <!--INPUT DO ID NÃO SERÁ EXIBIDO NA TELA-->
             <input name="id" type="hidden" value="<?php echo @$_GET['id'] ?>"> 
 
+            <input name="antigoCPF" type="hidden" value="<?php echo @$cpf ?>"> 
+
+            <input name="antigoEMAIL" type="hidden" value="<?php echo @$email ?>"> 
+
           </div>
         </form>
       </div>
@@ -158,7 +168,43 @@ require_once('../conexao.php');
   </div>
 
 
-  <!--CHAMADA DA TELA MODAL VIA SCRIPT-->
+   <!--TELA MODAL DELETAR-->
+  <div class="modal fade" tabindex="-1" id="modal-deletar">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><?php echo $titulo_modal ?></h5>
+          <!--TIVE QUE ENGLOBAR O BOTÃO FECHAR NO LINK PARA CORRIGIR O ERRO DE CARREGAMENTO DA PÁGINA-->
+          <a href="index.php?pagina=<?php echo $pag ?>"><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></a>
+        </div>
+        <form method="POST" id="form-excluir">
+          <div class="modal-body">
+            
+            <p>Deseja Realmente Exluir o Registro?</p>
+
+            <small>
+              <div align="center" class="mt-1" id="mensagem-excluir">
+
+              </div>
+            </small>
+
+          </div>
+          <div class="modal-footer">
+            <!--TIVE QUE ENGLOBAR O BOTÃO FECHAR NO LINK PARA CORRIGIR O ERRO DE CARREGAMENTO DA PÁGINA-->
+            <a href="index.php?pagina=<?php echo $pag ?>"><button name="btn-fechar" id="btn-fechar"type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button></a>
+            <button name="btn-excluir" id="btn-excluir" type="submit" class="btn btn-danger">Excluir</button>
+
+            <!--INPUT DO ID NÃO SERÁ EXIBIDO NA TELA-->
+            <input name="id" type="hidden" value="<?php echo @$_GET['id'] ?>"> 
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!--CHAMADA DA TELA MODAL NOVO USUÁRIO VIA SCRIPT-->
   <?php if(@$_GET['funcao'] == "novo") { ?>
 
     <script type="text/javascript">
@@ -183,7 +229,7 @@ require_once('../conexao.php');
 
 <?php } ?>
 
-  <!--CHAMADA DA TELA MODAL VIA SCRIPT-->
+  <!--CHAMADA DA TELA MODAL EDITAR VIA SCRIPT-->
   <?php if(@$_GET['funcao'] == "editar") { ?>
 
     <script type="text/javascript">
@@ -203,6 +249,23 @@ require_once('../conexao.php');
     //ABRIR A TELA MODAL ( myModal.show(); or myModal.toggle(); )
     myModal.show();
     //myModal.toggle();
+
+  </script>
+
+<?php } ?>
+
+  <!--CHAMADA DA TELA MODAL DELETAR VIA SCRIPT-->
+  <?php if(@$_GET['funcao'] == "deletar") { ?>
+
+    <script type="text/javascript">
+
+    //CRIANDO A VARIÁVEL DA TELA MODAL - ESTATICA
+    const myModal = new bootstrap.Modal(document.getElementById('modal-deletar'), {
+      //backdrop: 'static'
+    });
+
+    myModal.show();
+  
 
   </script>
 
@@ -255,6 +318,49 @@ require_once('../conexao.php');
                 }
                 return myXhr;
               }
+            });
+      });
+    </script>
+
+    <!--AJAX PARA EXCLUIR DADOS-->
+<script type="text/javascript">
+  $("#form-excluir").submit(function () {
+    var pag = "<?=$pag?>";
+        event.preventDefault(); //EVITA QUE A PÁGINA SEJA ATUALIZADA
+        var formData = new FormData(this); // CRIANDO A VARIÁVEL DO FORMULARIO
+
+        //ESTRUTURA DO AJAXS
+        $.ajax({
+          url: pag + "/excluir.php",
+          type: 'POST',
+          data: formData,
+
+          success: function (mensagem) {
+
+            $('#mensagem').removeClass()
+
+            if (mensagem.trim() == "Excluído com Sucesso!") {
+
+                    $('#mensagem-excluir').addClass('text-success')
+
+                    //$('#nome').val('');
+                    //$('#cpf').val('');
+                    $('#btn-fechar').click();
+                    window.location = "index.php?pagina=<?php echo $pag ?>";//FAZ A ATUALIZAÇÃO DA PAGINA
+
+                  } else {
+                    //EXIBE A MESAGEM DE ERRO
+                    $('#mensagem-excluir').addClass('text-danger')
+                  }
+
+                  $('#mensagem-excluir').text(mensagem)
+
+                },
+
+                cache: false,
+                contentType: false,
+                processData: false,
+
             });
       });
     </script>
