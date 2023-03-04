@@ -2,8 +2,16 @@
 <?php
 $pag = 'usuarios';
 
+//INICIANDO A VARIÁVEL DE SESSÃO
+@session_start();
+
 require_once('../conexao.php');
+
+//VERIFICAR PERMISSÃO DO USUÁRIO
+require_once('verificar-permissao.php');
+
 ?>
+
 
 <!--BOTÃO CADASTRAR USUÁRIOS-->
 <a href="index.php?pagina=<?php echo $pag ?>&funcao=novo" type="button" id="btn-novoUsuario" class="btn btn-dark mt-2">Novo Usuário</a>

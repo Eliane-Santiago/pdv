@@ -1,6 +1,17 @@
 <?php
+
+//INICIANDO A VARIÁVEL DE SESSÃO
+@session_start();
+
 //INCLUINDO O ARQUIVO DE CONFIGURAÇÃO
-require_once('../config.php'); //ARQUIVO CONFIG ESTÁ NO DIRETÓRIO ANTERIOR
+require_once('../config.php'); //ARQUIVO CONFIG ESTÁ NO DIRETÓRIO ANTERIO
+
+require_once('../conexao.php');
+
+//VERIFICAR PERMISSÃO DO USUÁRIO
+require_once('verificar-permissao.php');
+
+
 
 //VARIÁVEIS DO MENU ADMINISTRATIVO
 $menu1 = 'home';
@@ -8,6 +19,22 @@ $menu2 = 'usuarios';
 
   //Mastra a versão do php que está rodando
   //phpinfo();
+
+//RECUPERAR DADOS DO USUÁRIO
+$query_con = $pdo->query("SELECT * FROM usuarios WHERE cpf = '$_SESSION[cpf_usuario]'");
+
+$res_con = $query_con->fetchAll(PDO::FETCH_ASSOC); // ESSE COMANDO É PARA SER USADO SOMENTE NO SELECT
+
+$nome_usu = $res_con[0]['nome'];
+$email_usu = $res_con[0]['email'];
+$senha_usu = $res_con[0]['senha'];
+$nivel_usu = $res_con[0]['nivel'];
+$cpf_usu = $res_con[0]['cpf'];
+$id_usu = $res_con[0]['id'];
+
+//TESTE
+//echo($email_usu);
+
 
 ?>
 
@@ -76,12 +103,12 @@ $menu2 = 'usuarios';
             <ul class="navbar-nav">
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Administrador
+                  <?php echo $_SESSION['nome_usuario'] ?>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark">
-                  <li><a class="dropdown-item" href="#">Editar Perfil</a></li>
+                  <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-perfil">Editar Perfil</a></li>
                   <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">Sair</a></li>
+                  <li><a class="dropdown-item" href="../logout.php">Sair</a></li>
                 </ul>
               </li>
             </ul>
@@ -104,10 +131,129 @@ $menu2 = 'usuarios';
   </div>
 
 
+  <!--TELA MODAL PERFIL USUÁRIOS-->
+  <div class="modal fade" tabindex="-1" id="modal-perfil" data-bs-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar Perfil</h5>
+          <!--TIVE QUE ENGLOBAR O BOTÃO FECHAR NO LINK PARA CORRIGIR O ERRO DE CARREGAMENTO DA PÁGINA-->
+          <a href="index.php?pagina=<?php echo $pag ?>"><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></a>
+        </div>
+        <form method="POST" id="form-perfil">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label">Nome</label>
+                  <input type="text" class="form-control" id="input-nome-perfil" name="input-nome-perfil" placeholder="Nome" required="" value="<?php echo @$nome_usu ?>">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label">CPF</label>
+                  <input type="text" class="form-control" id="input-cpf-perfil" name="input-cpf-perfil" placeholder="CPF" required=""value="<?php echo @$cpf_usu ?>">
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">E-mail</label>
+              <input type="email" class="form-control" id="input-email-perfil" name="input-email-perfil" placeholder="Email" required="" value="<?php echo @$email_usu ?>">
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Senha</label>
+              <input type="text" class="form-control" id="input-senha-perfil" name="input-senha-perfil" placeholder="Senha" required="" value="<?php echo @$senha_usu ?>">
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Nível</label>
+              <!--CRIANDO AS OPÇÕES DE NÍVEL-->
+              <select class="form-select mt-1" aria-label="Default select example" name="nivel-perfil">
+                <option <?php if(@$nivel_usu == 'Operador'){ ?> selected <?php } ?>  value="Operador">Operador</option>
+
+                <option <?php if(@$nivel_usu == 'Administrador'){ ?> selected <?php } ?>  value="Administrador">Administrador</option>
+
+                <option <?php if(@$nivel_usu == 'Tesoureiro'){ ?> selected <?php } ?>  value="Tesoureiro">Tesoureiro</option>
+              </select>
+            </div>
+            <small>
+              <div align="center" class="mt-1" id="mensagem-perfil">
+
+              </div>
+            </small>
+          </div>
+          <div class="modal-footer">
+            <!--TIVE QUE ENGLOBAR O BOTÃO FECHAR NO LINK PARA CORRIGIR O ERRO DE CARREGAMENTO DA PÁGINA-->
+            <a href="index.php?pagina=<?php echo $pag ?>"><button name="btn-fechar" id="btn-fechar"type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button></a>
+            <button name="btn-salvar-perfil" id="btn-salvar-perfil" type="submit" class="btn btn-primary">Salvar</button>
+
+            <!--INPUT DO ID NÃO SERÁ EXIBIDO NA TELA-->
+            <input name="id-perfil" type="hidden" value="<?php echo @$id_usu ?>"> 
+
+            <input name="antigoCPF-prefil" type="hidden" value="<?php echo @$cpf_usu ?>"> 
+
+            <input name="antigoEMAIL-perfil" type="hidden" value="<?php echo @$email_usu ?>"> 
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
   <!--JAVASCRIPT ARQUIVO MASCARA-->
   <script type="text/javascript" src="../vendor/js/mascaras.js"></script>
   <!--SCRIPT CDN JQUERY E AJAX PARA MASCARA-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
+
+  <!--AJAX PARA INSERÇÃO E EDIÇÃO DOS DADOS COM IMAGEM -->
+<script type="text/javascript">
+  $("#form-perfil").submit(function () {
+    var pag = "<?=$pag?>";
+        event.preventDefault(); //EVITA QUE A PÁGINA SEJA ATUALIZADA
+        var formData = new FormData(this); // CRIANDO A VARIÁVEL DO FORMULARIO
+
+        //ESTRUTURA DO AJAXS
+        $.ajax({
+          url: "/editar-perfil.php",
+          type: 'POST',
+          data: formData,
+
+          success: function (mensagem) {
+
+            $('#mensagem').removeClass()
+
+            if (mensagem.trim() == "Salvo com Sucesso!") {
+
+                    //$('#nome').val('');
+                    //$('#cpf').val('');
+                    $('#btn-fechar').click();
+                    //window.location = "index.php?pagina="+pag;//FAZ A ATUALIZAÇÃO DA PAGINA
+
+                  } else {
+                    //EXIBE A MESAGEM DE ERRO
+                    $('#mensagem').addClass('text-danger')
+                  }
+
+                  $('#mensagem').text(mensagem)
+
+                },
+
+            //PASSAR ARQUIVO JUNTO AO FORMULARIO
+            cache: false,
+            contentType: false,
+            processData: false,
+            xhr: function () {  // Custom XMLHttpRequest
+              var myXhr = $.ajaxSettings.xhr();
+                if (myXhr.upload) { // Avalia se tem suporte a propriedade upload
+                  myXhr.upload.addEventListener('progress', function () {
+                    /* faz alguma coisa durante o progresso do upload */
+                  }, false);
+                }
+                return myXhr;
+              }
+            });
+      });
+    </script>
 
 </body>
 </html>
