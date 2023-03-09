@@ -53,34 +53,17 @@ if($antigoCPF != $cpf){
 	}
 }
 
-//OBS: IMPORTÂNCIA DO AJAX NO CÓDIGO, É QUE MESMO DEPOIS DA MENSAGEM DO ERRO OS DADOS PERMANECEM NA PÁGINA MODAL PERMITE QUE O ERRO ESSA CORRIGIDO E O USUÁRIO CONTINUE COM A INSERINDO OS DADOS NO BD
 
-if($id == ""){
-
-	//INSERINDO DADOS NO BANCO DE DADOS
-	$res = $pdo->prepare("INSERT INTO usuarios SET nome = :nome, email = :email, cpf = :cpf, senha = :senha, nivel = :nivel");
-
-	$res->bindValue(":nome", $nome);
-	$res->bindValue(":email", $email);
-	$res->bindValue(":cpf", $cpf);
-	$res->bindValue(":senha", $senha);
-	$res->bindValue(":nivel", $nivel);
-	$res->execute(); 	
-
-}else{
 
 	//EDITANDO OS DADOS NO BANCO DE DADOS
-	$res = $pdo->prepare("UPDATE usuarios SET nome = :nome, email = :email, cpf = :cpf, senha = :senha, nivel = :nivel WHERE id = :id");
+	$res = $pdo->prepare("UPDATE usuarios SET nome = :nome, email = :email, cpf = :cpf, senha = :senha WHERE id = :id");
 
 	$res->bindValue(":nome", $nome);
 	$res->bindValue(":email", $email);
 	$res->bindValue(":cpf", $cpf);
 	$res->bindValue(":senha", $senha);
-	$res->bindValue(":nivel", $nivel);
 	$res->bindValue(":id", $id);
 	$res->execute(); 
-
-}
 
 
 

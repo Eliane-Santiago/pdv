@@ -12,6 +12,7 @@ require_once('../conexao.php');
 require_once('verificar-permissao.php');
 
 
+$pag = 'usuarios';
 
 //VARIÁVEIS DO MENU ADMINISTRATIVO
 $menu1 = 'home';
@@ -21,7 +22,7 @@ $menu2 = 'usuarios';
   //phpinfo();
 
 //RECUPERAR DADOS DO USUÁRIO
-$query_con = $pdo->query("SELECT * FROM usuarios WHERE cpf = '$_SESSION[cpf_usuario]'");
+$query_con = $pdo->query("SELECT * FROM usuarios WHERE id = '$_SESSION[id_usuario]'");
 
 $res_con = $query_con->fetchAll(PDO::FETCH_ASSOC); // ESSE COMANDO É PARA SER USADO SOMENTE NO SELECT
 
@@ -103,7 +104,7 @@ $id_usu = $res_con[0]['id'];
             <ul class="navbar-nav">
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <?php echo $_SESSION['nome_usuario'] ?>
+                  <?php echo $nome_usu ?>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark">
                   <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-perfil">Editar Perfil</a></li>
@@ -183,13 +184,18 @@ $id_usu = $res_con[0]['id'];
           </div>
           <div class="modal-footer">
             <!--TIVE QUE ENGLOBAR O BOTÃO FECHAR NO LINK PARA CORRIGIR O ERRO DE CARREGAMENTO DA PÁGINA-->
-            <a href="index.php?pagina=<?php echo $pag ?>"><button name="btn-fechar" id="btn-fechar"type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button></a>
+            <a href="index.php?pagina=<?php echo $pag ?>">
+              <button name="btn-fechar-perfil" id="btn-fechar-perfil"type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </a>
+            
+           
             <button name="btn-salvar-perfil" id="btn-salvar-perfil" type="submit" class="btn btn-primary">Salvar</button>
+            
 
             <!--INPUT DO ID NÃO SERÁ EXIBIDO NA TELA-->
             <input name="id-perfil" type="hidden" value="<?php echo @$id_usu ?>"> 
 
-            <input name="antigoCPF-prefil" type="hidden" value="<?php echo @$cpf_usu ?>"> 
+            <input name="antigoCPF-perfil" type="hidden" value="<?php echo @$cpf_usu ?>"> 
 
             <input name="antigoEMAIL-perfil" type="hidden" value="<?php echo @$email_usu ?>"> 
 
@@ -208,33 +214,33 @@ $id_usu = $res_con[0]['id'];
   <!--AJAX PARA INSERÇÃO E EDIÇÃO DOS DADOS COM IMAGEM -->
 <script type="text/javascript">
   $("#form-perfil").submit(function () {
-    var pag = "<?=$pag?>";
+        var pag = "<?=$pag?>";
         event.preventDefault(); //EVITA QUE A PÁGINA SEJA ATUALIZADA
         var formData = new FormData(this); // CRIANDO A VARIÁVEL DO FORMULARIO
 
         //ESTRUTURA DO AJAXS
         $.ajax({
-          url: "/editar-perfil.php",
+          url: "editar-perfil.php",
           type: 'POST',
           data: formData,
 
           success: function (mensagem) {
 
-            $('#mensagem').removeClass()
+            $('#mensagem-perfil').removeClass()
 
             if (mensagem.trim() == "Salvo com Sucesso!") {
 
                     //$('#nome').val('');
                     //$('#cpf').val('');
-                    $('#btn-fechar').click();
+                    $('#btn-fechar-perfil').click();
                     //window.location = "index.php?pagina="+pag;//FAZ A ATUALIZAÇÃO DA PAGINA
 
                   } else {
                     //EXIBE A MESAGEM DE ERRO
-                    $('#mensagem').addClass('text-danger')
+                    $('#mensagem-perfil').addClass('text-danger')
                   }
 
-                  $('#mensagem').text(mensagem)
+                  $('#mensagem-perfil').text(mensagem)
 
                 },
 

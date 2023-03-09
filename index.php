@@ -38,9 +38,19 @@ require_once("conexao.php");
 	<div class="limiter">
 		<div class="container-login100" style="background-image: url('vendor/login/images/bg-01.jpg');">
 			<div class="wrap-login100 p-t-30 p-b-50">
+
 				<span class="login100-form-title p-b-41">
-					<?php echo $nome_sistema ?>
+					
+					<div>
+						<?php echo $nome_sistema ?>	
+					</div>
+
+					<div>
+						<img src="img/logo.png" width="100">
+					</div>
+					
 				</span>
+
 				<form class="login100-form validate-form p-b-33 p-t-5" method="POST" action="autenticar.php">
 
 					<div class="wrap-input100 validate-input" data-validate = "Email ou CPF">
