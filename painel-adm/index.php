@@ -61,13 +61,17 @@ $id_usu = $res_con[0]['id'];
   <script type="text/javascript" src="../vendor/DataTabels-Traduzido/datatables.min.js"></script>
   <!--CDN ICONES BOOTSTRAP-->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+  <link rel="shortcut icon" href="../img/favicon.ico"/>
 </head>
 <body>
 
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="index.php">Administrador</a>
+      <a class="navbar-brand" href="index.php">
+        <img src="../img/logo.png" width="50">
+      </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
