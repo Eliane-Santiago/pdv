@@ -60,12 +60,12 @@ require_once('verificar-permissao.php');
               <td><?php echo $res_con[$i]['nivel'] ?></td>
               <td>
                 <!--CONFIGURAÇÕES DO BOTÃO EDITAR-->
-                <a href="index.php?pagina=<?php echo $pag ?>&funcao=editar&id=<?php echo $res_con[$i]['id'] ?>" title="Excluir Registro">
+                <a href="index.php?pagina=<?php echo $pag ?>&funcao=editar&id=<?php echo $res_con[$i]['id'] ?>" title="Editar Registro">
                   <i class="bi bi-pencil-square text-primary"></i>
                 </a>
 
                 <!--CONFIGURAÇÕES DO BOTÃO DELETAR-->
-                <a href="index.php?pagina=<?php echo $pag ?>&funcao=deletar&id=<?php echo $res_con[$i]['id'] ?>" title="Editar Registro">
+                <a href="index.php?pagina=<?php echo $pag ?>&funcao=deletar&id=<?php echo $res_con[$i]['id'] ?>" title="Excluir Registro">
                   <i class="bi bi-trash3-fill text-danger mx-3"></i>
                 </a>
               </td>

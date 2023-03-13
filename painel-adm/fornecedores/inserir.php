@@ -4,13 +4,14 @@ require_once("../../conexao.php"); //CHAMANDO O ARQUIVO DE CONEXÃO COM O BANCO 
 
 //CRIANDO A VARIÁVEL E ASSOCIANDO AO POST DOS CAMPOS
 $nome = $_POST['input-nome'];
+$tipoPessoa = $_POST['select-tipoPessoa'];
+$doc = $_POST['input-doc'];
 $email = $_POST['input-email'];
-$cpf = $_POST['input-cpf'];
-$senha = $_POST['input-senha'];
-$nivel = $_POST['nivel'];
+$telefone = $_POST['input-telefone'];
+$endereco = $_POST['input-endereco'];
 $id = $_POST['id'];
 
-$antigoCPF = $_POST['antigoCPF'];
+$antigoDOC = $_POST['antigoDOC'];
 $antigoEMAIL = $_POST['antigoEMAIL'];
 
 //TRATANDO O NÃO PREENCHIMENTO DO CAMPO (USE O required="" nas tags dos input)
@@ -25,7 +26,7 @@ if($nome == ""){
 
 //EVITANDO DUPLICIDADE NO REGISTRO E-MAIL
 if($antigoEMAIL != $email){
-	$query_con = $pdo->prepare("SELECT * FROM usuarios WHERE email = :email");
+	$query_con = $pdo->prepare("SELECT * FROM fornecedores WHERE email = :email");
 
 	$query_con->bindValue(":email", $email);
 	$query_con->execute(); 
@@ -33,22 +34,22 @@ if($antigoEMAIL != $email){
 
 	//VERIFICANDO SE O E-MAIL JA EXISTE NO BD E PARANDO A INSERSÃO NO BD
 	if(@count($res_con) > 0){
-		echo "Esse e-mail já está em uso com outro usuário.";
+		echo "Esse e-mail já está em uso com outro fornecedor.";
 		exit();
 	}
 }
 
-//EVITANDO DUPLICIDADE NO REGISTRO CPF
-if($antigoCPF != $cpf){
-	$query_con = $pdo->prepare("SELECT * FROM usuarios WHERE cpf = :cpf");
+//EVITANDO DUPLICIDADE NO REGISTRO DOC
+if($antigoDOC != $doc){
+	$query_con = $pdo->prepare("SELECT * FROM fornecedores WHERE doc = :doc");
 
-	$query_con->bindValue(":cpf", $cpf);
+	$query_con->bindValue(":doc", $doc);
 	$query_con->execute(); 
 	$res_con = $query_con->fetchAll(PDO::FETCH_ASSOC); // ESSE COMANDO É PARA SER USADO SOMENTE NO SELECT
 
-	//VERIFICANDO SE O CPF JA EXISTE NO BD E PARANDO A INSERSÃO NO BD
+	//VERIFICANDO SE O CPF/CNPJ JA EXISTE NO BD E PARANDO A INSERSÃO NO BD
 	if(@count($res_con) > 0){
-		echo "Esse cpf já está em uso com outro usuário.";
+		echo "Esse CPF/CNPJ já está em uso com outro fornecedor.";
 		exit();
 	}
 }
@@ -58,25 +59,27 @@ if($antigoCPF != $cpf){
 if($id == ""){
 
 	//INSERINDO DADOS NO BANCO DE DADOS
-	$res = $pdo->prepare("INSERT INTO usuarios SET nome = :nome, email = :email, cpf = :cpf, senha = :senha, nivel = :nivel");
+	$res = $pdo->prepare("INSERT INTO fornecedores SET nome = :nome, tipoPessoa = :tipoPessoa, doc = :doc, email = :email, telefone = :telefone, endereco = :endereco");
 
 	$res->bindValue(":nome", $nome);
+	$res->bindValue(":tipoPessoa", $tipoPessoa);
+	$res->bindValue(":doc", $doc);
 	$res->bindValue(":email", $email);
-	$res->bindValue(":cpf", $cpf);
-	$res->bindValue(":senha", $senha);
-	$res->bindValue(":nivel", $nivel);
+	$res->bindValue(":telefone", $telefone);
+	$res->bindValue(":endereco", $endereco);
 	$res->execute(); 	
 
 }else{
 
 	//EDITANDO OS DADOS NO BANCO DE DADOS
-	$res = $pdo->prepare("UPDATE usuarios SET nome = :nome, email = :email, cpf = :cpf, senha = :senha, nivel = :nivel WHERE id = :id");
+	$res = $pdo->prepare("UPDATE fornecedores SET nome = :nome, tipoPessoa = :tipoPessoa, doc = :doc, email = :email, telefone = :telefone, endereco = :endereco WHERE id = :id");
 
 	$res->bindValue(":nome", $nome);
+	$res->bindValue(":tipoPessoa", $tipoPessoa);
+	$res->bindValue(":doc", $doc);
 	$res->bindValue(":email", $email);
-	$res->bindValue(":cpf", $cpf);
-	$res->bindValue(":senha", $senha);
-	$res->bindValue(":nivel", $nivel);
+	$res->bindValue(":telefone", $telefone);
+	$res->bindValue(":endereco", $endereco);
 	$res->bindValue(":id", $id);
 	$res->execute(); 
 
