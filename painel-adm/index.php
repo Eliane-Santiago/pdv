@@ -18,6 +18,7 @@ $pag = 'usuarios';
 $menu1 = 'home';
 $menu2 = 'usuarios';
 $menu3 = 'fornecedores';
+$menu4 = 'categorias';
 
   //Mastra a versão do php que está rodando
   //phpinfo();
@@ -89,11 +90,11 @@ $id_usu = $res_con[0]['id'];
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Dropdown
+              Produtos
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><a class="dropdown-item" href="#">Cadastro de Produtos</a></li>
+              <li><a class="dropdown-item" href="index.php?pagina=<?php echo $menu4 ?>">Cadastro de Categorias</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="#">Something else here</a></li>
             </ul>
@@ -137,6 +138,12 @@ $id_usu = $res_con[0]['id'];
     }
     else if(@$_GET['pagina'] == $menu3){
       require_once($menu3 .'.php');
+    }
+    else if(@$_GET['pagina'] == $menu4){
+      require_once($menu4 .'.php');
+    }
+    else{
+      require_once($menu1. '.php');
     }
 
     ?>

@@ -39,7 +39,7 @@ require_once('verificar-permissao.php');
               <th>DOCUMENTO</th>
               <th>TELEFONE</th>
               <th>EMAIL</th>
-              <th>ENDEREÇO</th>
+              
               <th>AÇÕES</th>
             </tr>
           </thead>
@@ -59,7 +59,7 @@ require_once('verificar-permissao.php');
                 <td><?php echo $res_con[$i]['doc'] ?></td>
                 <td><?php echo $res_con[$i]['telefone'] ?></td>
                 <td><?php echo $res_con[$i]['email'] ?></td>
-                <td><?php echo $res_con[$i]['endereco'] ?></td>
+                
                 <td>
                   <!--CONFIGURAÇÕES DO BOTÃO EDITAR-->
                   <a href="index.php?pagina=<?php echo $pag ?>&funcao=editar&id=<?php echo $res_con[$i]['id'] ?>" title="Editar Registro">
@@ -69,6 +69,11 @@ require_once('verificar-permissao.php');
                   <!--CONFIGURAÇÕES DO BOTÃO DELETAR-->
                   <a href="index.php?pagina=<?php echo $pag ?>&funcao=deletar&id=<?php echo $res_con[$i]['id'] ?>" title="Excluir Registro">
                     <i class="bi bi-trash3-fill text-danger mx-3"></i>
+                  </a>
+
+                  <!--CONFIGURAÇÕES DO BOTÃO VISUALIZAR ENDEREÇO-->
+                  <a href="#" onclick="mostrarDados('<?php echo $res_con[$i]['endereco'] ?>', '<?php echo $res_con[$i]['nome'] ?>')" title="Ver Endereço">
+                    <i class="bi bi-house text-success"></i>
                   </a>
                 </td>
               </tr>
@@ -219,6 +224,29 @@ require_once('verificar-permissao.php');
 
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+
+  <!--TELA MODAL MOSTRAR ENDEREÇO-->
+  <div class="modal fade" tabindex="-1" id="modal-dados">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Endereço Fornecedor</h5>
+          <!--TIVE QUE ENGLOBAR O BOTÃO FECHAR NO LINK PARA CORRIGIR O ERRO DE CARREGAMENTO DA PÁGINA-->
+          <a href="index.php?pagina=<?php echo $pag ?>"><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></a>
+        </div>
+        <div class="modal-body mb-4">
+
+          <b>Nome: </b>
+          <span id="nome-registro"></span>
+          <hr>
+
+          <b>Endereço: </b>
+          <span id="endereco-registro"></span>
+
+        </div>
       </div>
     </div>
   </div>
@@ -392,5 +420,28 @@ require_once('verificar-permissao.php');
       });
     </script>
 
+    <!--SCRITP FUNÇÃO MOSTRAR DADOS-->
+    <script type="text/javascript">
+
+      function mostrarDados(endereco, nome){
+        
+        event.preventDefault(); //EVITA QUE A PÁGINA SEJA ATUALIZADA
+
+        //ASSOCIANDO AS VARIÁVEIS AOS CAMPOS DA MODAL DADOS
+        $('#nome-registro').text(nome);
+        $('#endereco-registro').text(endereco);
+
+        //CRIANDO A VARIÁVEL DA TELA MODAL - ESTATICA
+        const myModal = new bootstrap.Modal(document.getElementById('modal-dados'), {
+          backdrop: 'static'
+
+        });
+
+        //ABRIR A TELA MODAL ( myModal.show(); or myModal.toggle(); )
+        myModal.show();
+        //myModal.toggle();
+  }
+
+    </script>
 
 
