@@ -6,8 +6,8 @@ set mysql_user=root
 set mysql_password=
 
 rem backup file name generation
-set backup_path=C:\xampp\htdocs\pdv\backup_db
-set backup_name=bd_pdv_bkp_16032023
+set backup_path=C:\xampp\mysql\backup
+set backup_name=bd_pdv_bkp_21032023
 
 rem backup creation
 mysqldump --user=%mysql_user% --password=%mysql_password% --all-databases --routines --events --result-file="%backup_path%\%backup_name%.sql"
